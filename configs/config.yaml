@@ -5,5 +5,9 @@ defaults:
   - meta: default
   - paths: default
   - hydra: default
-  - lightning: default
+  - lightning/data: default
+  - lightning/model: default
+  - lightning/callbacks: default
+  - lightning/trainer: default
+  - lightning/logger: default
   - experiment: ???
