@@ -1,6 +1,6 @@
 {
-  "name": "workspace",
-  "dockerComposeFile": ["../compose.yml"],  // gpu -> ../compose.gpu.yml
+  "name": "llm-detect-ai-generated-text",
+  "dockerComposeFile": ["../compose.yml"], // gpu -> ../compose.gpu.yml
   "service": "workspace",
   "workspaceFolder": "/workspace",
   "runServices": ["workspace"],
@@ -12,6 +12,8 @@
       "settings": {
         "editor.renderWhitespace": "all",
         "python.defaultInterpreterPath": ".venv/bin/python",
+        "notebook.formatOnSave.enabled": true,
+        "notebook.formatOnCellExecution": true,
         "[python]": {
           "editor.defaultFormatter": "ms-python.black-formatter",
           "editor.formatOnSaveMode": "file",
