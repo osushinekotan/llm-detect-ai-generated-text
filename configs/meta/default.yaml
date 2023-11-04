@@ -1,0 +1,3 @@
+platform: kaggle
+competition: llm-detect-ai-generated-text
+alias: llm-detect

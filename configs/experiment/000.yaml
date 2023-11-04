@@ -1,0 +1,18 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /lightning.data: null
+  - override /lightning.model: null
+  - override /lightning.callbacks: default
+  - override /lightning.trainer: default
+  - override /lightning.trainer: logger
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["debug"]
+
+seed: 42

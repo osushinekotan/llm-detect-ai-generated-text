@@ -1,0 +1,9 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - meta: default
+  - paths: default
+  - hydra: default
+  - lightning: default
+  - experiment: ???
