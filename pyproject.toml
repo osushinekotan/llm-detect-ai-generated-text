@@ -21,6 +21,7 @@ black = "^23.10.1"
 mypy = "^1.6.1"
 ruff = "^0.1.4"
 ipykernel = "^6.26.0"
+notebook = "^7.0.6"
 
 [build-system]
 requires = ["poetry-core"]
