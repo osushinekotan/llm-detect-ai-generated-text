@@ -9,12 +9,13 @@ defaults:
   - override /lightning/callbacks: default
   - override /lightning/trainer: default
   - override /lightning/trainer: logger
+  - override /cv: stratified_kfold
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
 experiment_name: ${hydra:job.override_dirname}
-notebook: baseline_v1
+notebook: baseline_v01
 
-tags: ["debug", "aa"]
+tags: ["debug", "baseline"]
 seed: 42
