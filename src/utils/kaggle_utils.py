@@ -6,14 +6,15 @@ import subprocess
 import tempfile
 from fnmatch import fnmatch
 from functools import cached_property
-from logging import getLogger
 from pathlib import Path
 
 from kaggle import KaggleApi
 from omegaconf import DictConfig
 from transformers import AutoConfig, AutoTokenizer
 
-logger = getLogger(__name__)
+from src.utils.pylogger import RankedLogger
+
+logger = RankedLogger(__name__)
 
 
 def download_kaggle_competition_dataset(
