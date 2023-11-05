@@ -1,4 +1,4 @@
 _target_: sklearn.model_selection.KFold
-n_splits: 5
+n_splits: ${n_splits}
 shuffle: true
 random_state: ${seed}
