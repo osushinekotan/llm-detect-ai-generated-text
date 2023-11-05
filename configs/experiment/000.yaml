@@ -4,11 +4,11 @@
 # python train.py experiment=example
 
 defaults:
-  - override /lightning/data: null
-  - override /lightning/model: null
+  - override /lightning/data: default
+  - override /lightning/model: default
   - override /lightning/callbacks: default
   - override /lightning/trainer: default
-  - override /lightning/trainer: logger
+  - override /lightning/logger: default
   - override /cv: stratified_kfold
 
 # all parameters below will be merged with parameters from default configurations set above
@@ -17,5 +17,24 @@ defaults:
 experiment_name: ${hydra:job.override_dirname}
 notebook: baseline_v01
 
+debug: true
 tags: ["debug", "baseline"]
 seed: 42
+
+train: true
+n_splits: 2 # total folds
+train_folds: [0] # train folds
+
+model_name: roberta-base
+ckpt_path: null # example: /path/to/{fold}/model.ckpt
+
+lightning:
+  data:
+    lt_datamodule:
+      batch_size: 2
+    train_dataset:
+      max_length: 10
+    val_dataset:
+      max_length: 10
+  trainer:
+    max_epochs: 2
