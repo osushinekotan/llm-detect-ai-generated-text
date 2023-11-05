@@ -59,6 +59,9 @@ class CustomDataModule(LightningDataModule):
             drop_last=False,
         )
 
+    def predict_dataloader(self) -> DataLoader:
+        return self.val_dataloader()
+
     def teardown(self, stage: str | None = None) -> None:
         """Lightning hook for cleaning up after `trainer.fit()`, `trainer.validate()`,
         `trainer.test()`, and `trainer.predict()`.
