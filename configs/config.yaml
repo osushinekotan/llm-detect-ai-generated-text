@@ -11,4 +11,5 @@ defaults:
   - lightning/callbacks: default
   - lightning/trainer: default
   - lightning/logger: default
+  - cv: default
   - experiment: ???
