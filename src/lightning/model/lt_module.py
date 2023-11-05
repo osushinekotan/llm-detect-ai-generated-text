@@ -4,7 +4,7 @@ from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification import AUROC
 
 
-class MNISTLitModule(LightningModule):
+class CustomLitModule(LightningModule):
     def __init__(
         self,
         net: torch.nn.Module,

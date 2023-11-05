@@ -8,12 +8,12 @@ class DefaultDataset(Dataset):
     def __init__(
         self,
         df: pd.DataFrame,
-        tokenizer: AutoTokenizer,
+        model_name: str,
         max_length: int = 256,
         return_labels: bool = True,
     ):
         self.df = df
-        self.tokenizer = tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.max_length = max_length
         self.return_labels = return_labels
 

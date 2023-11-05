@@ -52,7 +52,7 @@ class CustomDataModule(LightningDataModule):
         """
         return DataLoader(
             dataset=self.val_dataset,
-            batch_size=self.batch_size_per_device,
+            batch_size=self.batch_size_per_device * 4,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
             shuffle=False,
