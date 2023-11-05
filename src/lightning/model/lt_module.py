@@ -12,6 +12,7 @@ class CustomLitModule(LightningModule):
         scheduler: torch.optim.lr_scheduler,
         criterion: torch.nn.Module,
         compile_model: bool,
+        scheduler_interval: str = "step",
     ) -> None:
         super().__init__()
 
@@ -21,6 +22,7 @@ class CustomLitModule(LightningModule):
         self.criterion = criterion
 
         self.compile_model = compile_model
+        self.scheduler_interval = scheduler_interval  # step or epoch
 
         # metric objects for calculating and averaging auroc across batches
         self.train_auroc = AUROC(task="binary")
@@ -128,13 +130,13 @@ class CustomLitModule(LightningModule):
         """
         optimizer = self.optimizer(params=self.trainer.model.parameters())  # type: ignore
         if self.scheduler is not None:
-            scheduler = self.scheduler(optimizer=optimizer)  # type: ignore
+            scheduler = self.scheduler(optimizer=optimizer, num_training_steps=self.trainer.estimated_stepping_batches)  # type: ignore
             return {
                 "optimizer": optimizer,
                 "lr_scheduler": {
                     "scheduler": scheduler,
                     "monitor": "val/loss",
-                    "interval": "epoch",
+                    "interval": self.scheduler_interval,
                     "frequency": 1,
                 },
             }
