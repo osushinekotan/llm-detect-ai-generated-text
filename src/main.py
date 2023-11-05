@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 import hydra
@@ -6,7 +5,9 @@ import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 from omegaconf import DictConfig
 
-logger = logging.getLogger(__name__)
+from src.utils.pylogger import RankedLogger
+
+logger = RankedLogger(__name__)
 
 
 @hydra.main(config_path="../configs", config_name="config")
