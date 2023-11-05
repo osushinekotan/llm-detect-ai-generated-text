@@ -20,18 +20,43 @@ def download_kaggle_competition_dataset(
     client: "KaggleApi",
     competition: str,
     out_dir: Path,
+    force: bool = False,
 ) -> None:
     zipfile_path = out_dir / f"{competition}.zip"
 
-    if not zipfile_path.is_file():
+    if not zipfile_path.is_file() and force:
         client.competition_download_files(
             competition=competition,
             path=out_dir,
             quiet=False,
         )
-        subprocess.run(["unzip", "-q", zipfile_path, "-d", out_dir])
+        subprocess.run(["unzip", "-o", "-q", zipfile_path, "-d", out_dir])
     else:
         logger.info("Dataset already exists.")
+
+
+def download_kaggle_datasets(
+    client: "KaggleApi",
+    datasets: list[str],
+    out_dir: Path,
+    force: bool = False,
+) -> None:
+    for dataset in datasets:
+        zipfile_path = out_dir / dataset / f"{dataset.split('/')[1]}.zip"
+        path = out_dir / dataset  # dataset: [owner]/[dataset-name]
+
+        if not zipfile_path.is_file() or force:
+            logger.info(f"Downloading dataset: {dataset}")
+            client.dataset_download_files(
+                dataset=dataset,
+                quiet=False,
+                unzip=False,
+                path=path,
+                force=force,
+            )
+            subprocess.run(["unzip", "-o", "-q", zipfile_path, "-d", path])
+        else:
+            logger.info(f"Dataset ({dataset}) already exists.")
 
 
 class Deploy:

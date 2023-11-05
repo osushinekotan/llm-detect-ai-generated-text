@@ -1,0 +1,3 @@
+external_datasets:
+  - thedrcat/daigt-proper-train-dataset
+  - radek1/llm-generated-essays

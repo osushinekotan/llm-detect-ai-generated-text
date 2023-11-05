@@ -5,6 +5,7 @@ defaults:
   - meta: default
   - paths: default
   - hydra: default
+  - kaggle: default
   - lightning/data: default
   - lightning/model: default
   - lightning/callbacks: default
