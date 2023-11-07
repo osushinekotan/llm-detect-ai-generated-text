@@ -1,5 +1,5 @@
 _target_: src.lightning.model.lt_module.CustomLitModule
-compile_model: true
+compile_model: false
 scheduler_interval: step
 
 net:
