@@ -7,10 +7,10 @@ defaults:
 
 model_checkpoint:
   dirpath: ${paths.output_dir}/checkpoints
-  filename: "epoch_{epoch:03d}"
+  filename: "best"
   monitor: "val/auroc"
   mode: "max"
-  save_last: True
+  save_last: false
   auto_insert_metric_name: False
 
 early_stopping:
