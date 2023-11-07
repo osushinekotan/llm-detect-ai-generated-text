@@ -30,7 +30,7 @@ class DefaultDataset(Dataset):
             text=self.texts[idx],
         )
         if self.return_labels:
-            labels = self.labels[idx]
+            labels = torch.Tensor([self.labels[idx]])
             return {
                 "input_ids": inputs["input_ids"],
                 "attention_mask": inputs["attention_mask"],
