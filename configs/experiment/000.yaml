@@ -25,7 +25,7 @@ train: true
 n_splits: 2 # total folds
 train_folds: [0] # train folds
 
-model_name: roberta-base
+model_name: microsoft/deberta-v3-small
 ckpt_path: null # example: /path/to/{fold}/model.ckpt
 
 lightning:
