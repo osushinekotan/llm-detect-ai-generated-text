@@ -38,3 +38,7 @@ lightning:
       max_length: 10
   trainer:
     max_epochs: 2
+  logger:
+    wandb:
+      tags: ${tags}
+      group: ${experiment_name}
