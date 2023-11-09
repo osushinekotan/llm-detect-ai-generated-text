@@ -23,7 +23,7 @@ seed: 42
 
 train: true
 n_splits: 2 # total folds
-train_folds: [0, 1] # train folds
+train_folds: [0] # train folds
 
 model_name: microsoft/deberta-v3-small
 ckpt_path: null # example: /path/to/{fold}/model.ckpt
@@ -31,13 +31,18 @@ ckpt_path: null # example: /path/to/{fold}/model.ckpt
 lightning:
   data:
     lt_datamodule:
-      batch_size: 2
+      batch_size: 1
     train_dataset:
-      max_length: 10
+      max_length: 4
     val_dataset:
-      max_length: 10
+      max_length: 4
+    test_dataset:
+      max_length: 4
+    test_dataloader:
+      batch_size: 1
   trainer:
-    max_epochs: 2
+    max_epochs: 1
+    precision: null
   logger:
     wandb:
       tags: ${tags}

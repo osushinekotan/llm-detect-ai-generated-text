@@ -26,3 +26,10 @@ test_dataset:
   max_length: 256
   return_labels: false
   df: null # will be set in train script
+
+test_dataloader:
+  _target_: torch.utils.data.DataLoader
+  dataset: null
+  batch_size: 128
+  num_workers: 0
+  pin_memory: true
