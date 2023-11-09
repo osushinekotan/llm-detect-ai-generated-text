@@ -15,7 +15,7 @@ defaults:
 # this allows you to overwrite only specified parameters
 
 experiment_name: ${hydra:job.override_dirname}
-notebook: baseline_v01
+notebook: v01
 
 debug: true
 tags: ["debug", "baseline"]
