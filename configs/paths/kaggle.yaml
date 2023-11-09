@@ -9,8 +9,6 @@ input_root_dir: /kaggle/input
 input_dir: ${paths.input_root_dir}/${meta.competition}
 
 output_dir: ??? # set your uploaded dataset name (...)
-artifact_dir: ${paths.output_dir}/artifacts
 misc_dir: ${paths.resource_dir}/misc
 
-inference_dir: ??? # set output dir in kaggle kernel
 submission_dir: ${paths.root_dir} # submission output
