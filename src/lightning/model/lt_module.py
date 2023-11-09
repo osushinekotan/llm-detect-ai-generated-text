@@ -3,6 +3,8 @@ from lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification import AUROC
 
+from src.utils.torch_utils import collate
+
 
 class CustomLitModule(LightningModule):
     def __init__(
@@ -141,11 +143,3 @@ class CustomLitModule(LightningModule):
                 },
             }
         return {"optimizer": optimizer}
-
-
-def collate(batch: dict) -> dict:
-    mask_len = int(batch["attention_mask"].sum(axis=1).max())
-    for k, v in batch.items():
-        if k not in ["labels", "targets"]:
-            batch[k] = batch[k][:, :mask_len]
-    return batch
