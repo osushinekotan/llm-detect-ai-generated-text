@@ -1,6 +1,6 @@
 {
   "name": "llm-detect-ai-generated-text",
-  "dockerComposeFile": ["../compose.yml"], // gpu -> ../compose.gpu.yml
+  "dockerComposeFile": ["../compose.gpu.yml"], // gpu -> ../compose.gpu.yml
   "service": "workspace",
   "workspaceFolder": "/workspace",
   "runServices": ["workspace"],
