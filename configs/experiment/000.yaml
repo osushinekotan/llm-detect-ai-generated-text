@@ -29,6 +29,9 @@ model_name: microsoft/deberta-v3-small
 ckpt_path: null # example: /path/to/{fold}/model.ckpt
 
 lightning:
+  model:
+    net:
+      gradient_checkpointing_enable: true
   data:
     lt_datamodule:
       batch_size: 1
@@ -42,7 +45,7 @@ lightning:
       batch_size: 1
   trainer:
     max_epochs: 1
-    precision: null
+    precision: 16
   logger:
     wandb:
       tags: ${tags}
