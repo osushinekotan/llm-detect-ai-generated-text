@@ -25,7 +25,7 @@ def download_kaggle_competition_dataset(
 ) -> None:
     zipfile_path = out_dir / f"{competition}.zip"
 
-    if not zipfile_path.is_file() and force:
+    if not zipfile_path.is_file() or force:
         client.competition_download_files(
             competition=competition,
             path=out_dir,
