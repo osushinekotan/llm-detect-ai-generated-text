@@ -17,7 +17,6 @@ def main(cfg: DictConfig) -> None:
         ignore_patterns=[
             ".git",
             "__pycache__",
-            ".hydra",
             "checkpoints",
             "*.log",
             "csv",
