@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import shutil
@@ -12,9 +13,8 @@ from kaggle import KaggleApi
 from omegaconf import DictConfig
 from transformers import AutoConfig, AutoTokenizer
 
-from src.utils.pylogger import RankedLogger
-
-logger = RankedLogger(__name__)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 def download_kaggle_competition_dataset(
@@ -69,7 +69,7 @@ class Deploy:
         self.cfg = cfg
         self.client = client
 
-    def push_output(self) -> None:
+    def push_output(self, ignore_patterns: list[str] = [".git", "__pycache__"]) -> None:
         # model and predictions
         dataset_name = self.cfg.meta.alias + "-" + re.sub(r"[/_=]", "-", self.cfg.experiment_name)
         metadata = make_dataset_metadata(dataset_name=dataset_name)
@@ -79,7 +79,7 @@ class Deploy:
             dataset=f'{os.getenv("KAGGLE_USERNAME")}/{dataset_name}',
             existing_dataset=self.existing_dataset,
         ):
-            logger.info(f"{dataset_name} already exist!! Stop pushing.")
+            logger.warning(f"{dataset_name} already exist!! Stop pushing. 🛑")
             return
 
         with tempfile.TemporaryDirectory() as tempdir:
@@ -88,7 +88,7 @@ class Deploy:
             copytree(
                 src=self.cfg.paths.output_dir,
                 dst=dst_dir,
-                ignore_patterns=[".git", "__pycache__"],
+                ignore_patterns=ignore_patterns,
             )
             self._display_tree(dst_dir=dst_dir)
 
@@ -110,7 +110,7 @@ class Deploy:
             dataset=f'{os.getenv("KAGGLE_USERNAME")}/{dataset_name}',
             existing_dataset=self.existing_dataset,
         ):
-            logger.info(f"{dataset_name} already exist!! Stop pushing.")
+            logger.warning(f"{dataset_name} already exist!! Stop pushing. 🛑")
             return
 
         # pretrained tokenizer and config
@@ -140,16 +140,21 @@ class Deploy:
 
             # for src directory
             dst_dir.mkdir(exist_ok=True, parents=True)
-            shutil.copy("./README.md", dst_dir)
+            shutil.copy(Path(self.cfg.paths.root_dir) / "README.md", dst_dir)
 
             copytree(
-                src="./src",
+                src=(Path(self.cfg.paths.root_dir) / "src").as_posix(),
                 dst=str(dst_dir / "src"),
                 ignore_patterns=[".git", "__pycache__"],
             )
             copytree(
-                src="./configs",
+                src=(Path(self.cfg.paths.root_dir) / "configs").as_posix(),
                 dst=str(dst_dir / "configs"),
+                ignore_patterns=[".git", "__pycache__"],
+            )
+            copytree(
+                src=(Path(self.cfg.paths.root_dir) / "notebooks").as_posix(),
+                dst=str(dst_dir / "notebooks"),
                 ignore_patterns=[".git", "__pycache__"],
             )
             self._display_tree(dst_dir=dst_dir)
