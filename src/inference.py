@@ -14,12 +14,11 @@ logger.setLevel(logging.DEBUG)
 def main(cfg: DictConfig) -> None:
     """Run experiment notebook."""
 
-    # parse experiment name from config (e.g. experiment_name=000)
-    experiment = cfg.experiment_name.split("=")[1]
-    env = {"EXPERIMENT": experiment}
+    # experiment_name = override_dir_name
+    env = {"OVERRIDES": cfg.experiment_name}
 
     exp_notebooks_dir = Path(cfg.paths.notebooks_dir) / "inference"
-    logger.info(f"Experiment: {experiment}, Notebook: {cfg.notebook}")
+    logger.info(f"Overrides: {env['OVERRIDES']}, Notebook: {cfg.notebook}")
 
     with open(exp_notebooks_dir / f"{cfg.notebook}.ipynb") as f:
         nb = nbformat.read(f, as_version=4)
