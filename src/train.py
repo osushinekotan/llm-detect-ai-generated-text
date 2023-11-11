@@ -11,7 +11,7 @@ logger.setLevel(logging.DEBUG)
 
 
 @hydra.main(config_path="../configs", config_name="config")
-def run_experiment(cfg: DictConfig) -> None:
+def main(cfg: DictConfig) -> None:
     """Run experiment notebook."""
 
     # parse experiment name from config (e.g. experiment_name=000)
@@ -41,4 +41,4 @@ def run_experiment(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    run_experiment()
+    main()
