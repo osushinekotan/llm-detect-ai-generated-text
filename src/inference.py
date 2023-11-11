@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import tempfile
 from pathlib import Path
 
 import hydra
@@ -18,28 +19,30 @@ def main(cfg: DictConfig) -> None:
     env["OVERRIDES"] = cfg.experiment_name
 
     exp_notebooks_dir = Path(cfg.paths.notebooks_dir) / "inference"
-    compiled_notebook_path = Path(cfg.paths.output_dir) / f"{cfg.notebook}.ipynb"
 
     logger = logging.getLogger(__name__)
     logger.info(f"Overrides: {env['OVERRIDES']}, Notebook: {cfg.notebook}")
 
-    command = [
-        "jupyter",
-        "nbconvert",
-        "--to",
-        "notebook",
-        "--execute",
-        "--output",
-        compiled_notebook_path.as_posix(),
-        (exp_notebooks_dir / f"{cfg.notebook}.ipynb").as_posix(),
-    ]  # Unsure how to set environment variables using nbconvert.ExecutePreprocessor
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_file_path = Path(tmpdir) / "temp_notebook.ipynb"
 
-    try:
-        subprocess.run(command, env=env, check=True)
-        logger.info("Finished running notebook successfully! 🎉")
-    except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to run notebook 😭: {e}")
-        raise
+        command = [
+            "jupyter",
+            "nbconvert",
+            "--to",
+            "notebook",
+            "--execute",
+            "--output",
+            temp_file_path.as_posix(),
+            (exp_notebooks_dir / f"{cfg.notebook}.ipynb").as_posix(),
+        ]
+
+        try:
+            subprocess.run(command, env=env, check=True)
+            logger.info("Finished running notebook successfully! 🎉")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Failed to run notebook 😭: {e}")
+            raise
 
 
 if __name__ == "__main__":
