@@ -23,7 +23,7 @@ seed: 42
 
 train: true
 n_splits: 2 # total folds
-train_folds: [0] # train folds
+train_folds: [0, 1] # train folds
 
 model_name: microsoft/deberta-v3-small
 ckpt_path: null # example: /path/to/{fold}/model.ckpt
@@ -34,17 +34,17 @@ lightning:
       gradient_checkpointing_enable: true
   data:
     lt_datamodule:
-      batch_size: 1
+      batch_size: 8
     train_dataset:
-      max_length: 4
+      max_length: 128
     val_dataset:
-      max_length: 4
+      max_length: 8
     test_dataset:
-      max_length: 4
+      max_length: 128
     test_dataloader:
-      batch_size: 1
+      batch_size: 32
   trainer:
-    max_epochs: 1
+    max_epochs: 4
     precision: 16
   logger:
     wandb:
