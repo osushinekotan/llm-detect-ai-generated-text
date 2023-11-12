@@ -1,5 +1,5 @@
 lt_datamodule:
-  _target_: src.lightning.data.lt_datamodule.DefaultLitModule
+  _target_: src.lightning.data.lt_datamodule.DefaultDataModule
   batch_size: 32
   num_workers: 0
   pin_memory: true
