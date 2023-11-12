@@ -1,9 +1,9 @@
-_target_: src.lightning.model.lt_module.CustomLitModule
+_target_: src.lightning.model.lt_module.DefaultLitModule
 compile_model: false
 scheduler_interval: step
 
 net:
-  _target_: src.lightning.model.components.text_transformer.DefaultModel
+  _target_: src.lightning.model.components.text.DefaultModel
   model_name: ${model_name}
   num_labels: 1
   gradient_checkpointing_enable: false
