@@ -2,3 +2,4 @@ external_datasets:
   - thedrcat/daigt-proper-train-dataset
   - radek1/llm-generated-essays
   - alejopaullier/daigt-external-dataset
+  - carlmcbrideellis/llm-7-prompt-training-dataset
