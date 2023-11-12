@@ -6,7 +6,7 @@ from torchmetrics.classification import AUROC
 from src.utils.torch_utils import collate
 
 
-class CustomLitModule(LightningModule):
+class DefaultLitModule(LightningModule):
     def __init__(
         self,
         net: torch.nn.Module,
@@ -143,3 +143,18 @@ class CustomLitModule(LightningModule):
                 },
             }
         return {"optimizer": optimizer}
+
+
+class EmbeddingLitModule(LightningModule):
+    def __init__(self, net: torch.nn.Module, compile_model: bool) -> None:
+        super().__init__()
+
+        self.net = net
+        self.compile_model = compile_model
+
+    def forward(self, batch: dict) -> torch.Tensor:
+        return self.net(batch)
+
+    def setup(self, stage: str) -> None:
+        if self.compile_model and stage == "fit":
+            self.net = torch.compile(model=self.net)  # type: ignore

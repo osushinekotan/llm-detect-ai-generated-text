@@ -2,7 +2,7 @@ from lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
 
-class CustomDataModule(LightningDataModule):
+class DefaultDataModule(LightningDataModule):
     def __init__(
         self,
         train_dataset: Dataset,
@@ -85,3 +85,39 @@ class CustomDataModule(LightningDataModule):
         :param state_dict: The datamodule state returned by `self.state_dict()`.
         """
         pass
+
+
+class EmbeddingDataModule(LightningDataModule):
+    def __init__(
+        self,
+        dataset: Dataset,
+        batch_size: int = 64,
+        num_workers: int = 0,
+        pin_memory: bool = False,
+    ) -> None:
+        super().__init__()
+
+        self.dataset = dataset
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.pin_memory = pin_memory
+        self.batch_size_per_device = batch_size
+
+    def setup(self, stage: str | None = None) -> None:
+        # Divide batch size by the number of devices.
+        if self.trainer is not None:
+            if self.batch_size % self.trainer.world_size != 0:
+                raise RuntimeError(
+                    f"Batch size ({self.batch_size}) is not divisible by the number of devices ({self.trainer.world_size})."
+                )
+            self.batch_size_per_device = self.batch_size // self.trainer.world_size
+
+    def predict_dataloader(self) -> DataLoader:
+        return DataLoader(
+            dataset=self.dataset,
+            batch_size=self.batch_size_per_device * 4,
+            num_workers=self.num_workers,
+            pin_memory=self.pin_memory,
+            shuffle=False,
+            drop_last=False,
+        )
