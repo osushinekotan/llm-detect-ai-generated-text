@@ -18,11 +18,12 @@ experiment_name: ${hydra:job.override_dirname}
 notebook: v01
 
 debug: true
-tags: ["debug", "baseline"]
+tags: ["debug", "fine-tuning", "baseline"]
+description: "debugging baseline"
 seed: 42
 
 train: true
-n_splits: 2 # total folds
+n_splits: 5 # total folds
 train_folds: [0, 1] # train folds
 
 model_name: microsoft/deberta-v3-small
