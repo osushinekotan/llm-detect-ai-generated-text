@@ -1,0 +1,14 @@
+lt_datamodule:
+  _target_: src.lightning.data.lt_datamodule.EmbeddingDataModule
+  batch_size: 32
+  num_workers: 0
+  pin_memory: true
+  train_dataset: null # will be set in train script
+  val_dataset: null # will be set in train script
+
+train_dataset:
+  _target_: src.lightning.data.components.text.DefaultDataset
+  model_name: ${model_name}
+  max_length: 256
+  return_labels: true
+  df: null # will be set in train script

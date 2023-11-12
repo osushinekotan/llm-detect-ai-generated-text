@@ -1,0 +1,7 @@
+_target_: src.lightning.model.lt_module.EmbeddingLitModule
+compile_model: false
+
+net:
+  _target_: src.lightning.model.components.text.EmbeddingModel
+  model_name: ${model_name}
+  embedding_type: ${embedding_type}
