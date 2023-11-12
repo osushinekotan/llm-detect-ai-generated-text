@@ -17,9 +17,9 @@ class DefaultDataset(Dataset):
         self.max_length = max_length
         self.return_labels = return_labels
 
-        self.texts = df["cleansed_text"].tolist()
+        self.texts = df["text"].tolist()
         if self.return_labels:
-            self.labels = df["generated"].tolist()
+            self.labels = df["label"].tolist()
 
     def __len__(self) -> int:
         return len(self.df)
