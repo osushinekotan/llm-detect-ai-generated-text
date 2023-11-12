@@ -54,27 +54,27 @@ class DefaultModel(nn.Module):
 
 
 class EmbeddingModel(nn.Module):
-    def __init__(self, model_name: str, output_type: str = "cls"):
+    def __init__(self, model_name: str, embedding_type: str = "cls"):
         super().__init__()
 
         self.model_config = AutoConfig.from_pretrained(model_name, output_hidden_states=True)
         self.model = AutoModel.from_pretrained(model_name, config=self.model_config)
 
-        self.output_type = output_type
+        self.embedding_type = embedding_type
 
     def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
         outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)
 
-        if self.output_type == "mean":
+        if self.embedding_type == "mean":
             return mean_pooling(outputs, attention_mask)
-        elif self.output_type == "max":
+        elif self.embedding_type == "max":
             return max_pooling(outputs, attention_mask)
-        elif self.output_type == "last":
+        elif self.embedding_type == "last":
             return get_last_token_embedding(outputs)
-        elif self.output_type == "cls":
+        elif self.embedding_type == "cls":
             return get_cls_token_embedding(outputs)
 
-        raise ValueError(f"Invalid output type: {self.output_type}")
+        raise ValueError(f"Invalid output type: {self.embedding_type}")
 
 
 def mean_pooling(model_output: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
