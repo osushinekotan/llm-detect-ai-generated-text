@@ -1,0 +1,39 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /lightning/data: embedding
+  - override /lightning/model: embedding
+  - override /lightning/callbacks: default
+  - override /lightning/trainer: default
+  - override /cv: stratified_kfold
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+experiment_name: ${hydra:job.override_dirname}
+notebook: v02
+
+debug: true
+tags: ["embedding", "xgb"]
+description: "debugging baseline"
+seed: 42
+
+train: true
+n_splits: 5 # total folds
+train_folds: [0, 1] # train folds
+
+model_name: microsoft/deberta-v3-small
+embedding_type: cls
+ckpt_path: null # example: /path/to/{fold}/model.ckpt
+
+lightning:
+  data:
+    lt_datamodule:
+      batch_size: 8
+      num_workers: 0
+      pin_memory: false
+    dataset:
+      max_length: 128
