@@ -10,7 +10,7 @@ defaults:
 # this allows you to overwrite only specified parameters
 
 experiment_name: ${hydra:job.override_dirname}
-notebook: e01
+notebook: stacking_linear_v01
 
 debug: true
 tags: ["debug", "staking"]
