@@ -1,0 +1,51 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /cv: stratified_kfold
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+experiment_name: ${hydra:job.override_dirname}
+notebook: e01
+
+debug: true
+tags: ["debug", "staking"]
+description: "debugging staking"
+seed: 42
+
+train: true
+n_splits: 5 # total folds
+train_folds: [0, 1] # train folds
+
+stacking:
+  level_0:
+    inputs: ["experiment=000", "experiment=001"]
+    model:
+      estimator:
+        _target_: sklearn.linear_model.BayesianRidge
+    # model:
+    #   estimator:
+    #     _target_: xgboost.XGBModel
+    #     objective: binary:logistic
+    #     tree_method: hist
+    #     device: cuda
+    #     eval_metric: auc
+    #     n_estimators: 10000
+    #     max_depth: 5
+    #     learning_rate: 0.01
+    #     subsample: 0.8
+    #     colsample_bytree: 0.8
+    #     verbosity: 2
+    #     random_state: ${seed}
+    #   callbacks:
+    #     early_stopping:
+    #       _target_: xgboost.callback.EarlyStopping
+    #       rounds: 100
+    #       min_delta: 1e-5
+    #       save_best: True
+    #       maximize: True
+    #       data_name: validation_0

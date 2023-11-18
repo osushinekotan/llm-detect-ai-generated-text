@@ -24,7 +24,7 @@ seed: 42
 
 train: true
 n_splits: 5 # total folds
-train_folds: [0, 1] # train folds
+train_folds: [0] # train folds
 
 model_name: microsoft/deberta-v3-small
 ckpt_path: null # example: /path/to/{fold}/model.ckpt
@@ -39,7 +39,7 @@ lightning:
     train_dataset:
       max_length: 128
     val_dataset:
-      max_length: 8
+      max_length: 128
     test_dataset:
       max_length: 128
     test_dataloader:
