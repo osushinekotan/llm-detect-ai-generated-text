@@ -17,10 +17,8 @@ defaults:
 experiment_name: ${hydra:job.override_dirname}
 notebook: finetune_v01
 
-debug: true
-tags: ["debug", "fine-tuning", "baseline"]
+tags: ["fine-tuning", "baseline"]
 description: "debugging baseline"
-seed: 42
 
 train: true
 n_splits: 5 # total folds

@@ -13,3 +13,6 @@ defaults:
   - lightning/logger: default
   - cv: default
   - experiment: ???
+
+seed: 42
+debug: true

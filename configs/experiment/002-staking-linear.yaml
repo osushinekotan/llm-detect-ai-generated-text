@@ -12,10 +12,8 @@ defaults:
 experiment_name: ${hydra:job.override_dirname}
 notebook: stacking_linear_v01
 
-debug: true
-tags: ["debug", "staking"]
+tags: ["staking"]
 description: "debugging staking"
-seed: 42
 
 train: true
 n_splits: 5 # total folds
