@@ -29,7 +29,7 @@ gcloud_auth:
 
 install_gcsfuse: 
 	gcloud config set project ${PROJECT_ID}
-	gcloud storage buckets create gs://${BUCKET_NAME} --location=asia-northeast1
+	gcloud storage buckets create gs://${BUCKET_NAME} --location=asia-east1
 	export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
 	echo "deb http://packages.cloud.google.com/apt ${GCSFUSE_REPO} main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
 	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
