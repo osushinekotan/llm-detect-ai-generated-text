@@ -1,3 +1,15 @@
+## Env
+set environment variables
+```
+echo 'source ".env"' >> ~/.bashrc
+```
+
+install gcsfuse & mount bucket
+```
+source gcp/install_gcsfuse.sh
+source gcp/mount_bucket.sh
+```
+
 ## Rye
 ```
 curl -sSf https://rye-up.com/get | bash
