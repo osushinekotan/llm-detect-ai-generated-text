@@ -1,0 +1,1 @@
+sudo gcsfuse -o allow_other -file-mode=777 -dir-mode=777 ${BUCKET_NAME} ${MOUNT_DIR}
