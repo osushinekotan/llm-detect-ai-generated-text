@@ -24,13 +24,21 @@ def download_kaggle_competition_dataset(
     force: bool = False,
 ) -> None:
     zipfile_path = out_dir / f"{competition}.zip"
+    zipfile_path.parent.mkdir(exist_ok=True, parents=True)
 
     if not zipfile_path.is_file() or force:
-        client.competition_download_files(
-            competition=competition,
-            path=out_dir,
-            quiet=False,
-        )
+        with tempfile.TemporaryDirectory() as tempdir:
+            # NOTE : escape error when use gcsfuse
+            client.competition_download_files(
+                competition=competition,
+                path=tempdir,
+                quiet=False,
+            )
+            # TODO : fix error when use gcsfuse
+            try:
+                shutil.move(Path(tempdir) / f"{competition}.zip", zipfile_path)
+            except OSError as e:
+                logger.warning(f"{e} : please ignore error & warnings 😢")
         subprocess.run(["unzip", "-o", "-q", zipfile_path, "-d", out_dir])
     else:
         logger.info("Dataset already exists.")
@@ -45,16 +53,25 @@ def download_kaggle_datasets(
     for dataset in datasets:
         zipfile_path = out_dir / dataset / f"{dataset.split('/')[1]}.zip"
         path = out_dir / dataset  # dataset: [owner]/[dataset-name]
+        path.mkdir(exist_ok=True, parents=True)
 
         if not zipfile_path.is_file() or force:
             logger.info(f"Downloading dataset: {dataset}")
-            client.dataset_download_files(
-                dataset=dataset,
-                quiet=False,
-                unzip=False,
-                path=path,
-                force=force,
-            )
+            with tempfile.TemporaryDirectory() as tempdir:
+                tmp_path = Path(tempdir) / dataset
+                client.dataset_download_files(
+                    dataset=dataset,
+                    quiet=False,
+                    unzip=False,
+                    path=tmp_path,
+                    force=force,
+                )
+                # TODO : fix error when use gcsfuse
+                try:
+                    shutil.move(tmp_path / f"{dataset.split('/')[1]}.zip", zipfile_path)
+                except OSError as e:
+                    logger.warning(f"{e} : please ignore error & warnings 😢")
+
             subprocess.run(["unzip", "-o", "-q", zipfile_path, "-d", path])
         else:
             logger.info(f"Dataset ({dataset}) already exists.")
