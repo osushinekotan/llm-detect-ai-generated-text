@@ -1,7 +1,7 @@
 ## Env
 set environment variables
 ```
-echo 'source ".env"' >> ~/.bashrc
+echo 'export $(cat .env | grep -v ^#)' >> ~/.bashrc
 ```
 
 create bucket
