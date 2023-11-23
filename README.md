@@ -4,6 +4,11 @@ set environment variables
 echo 'source ".env"' >> ~/.bashrc
 ```
 
+create bucket
+```
+source gcp/create_bucket.sh
+```
+
 install gcsfuse & mount bucket
 ```
 source gcp/install_gcsfuse.sh
