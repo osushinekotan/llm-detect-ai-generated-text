@@ -10,7 +10,6 @@ dependencies = [
     "hydra-colorlog>=1.2.0",
     "lightning>=2.1.2",
     "kaggle>=1.5.16",
-    "pandas>=2.0.3",
     "tqdm>=4.66.1",
     "scikit-learn>=1.3.2",
     "wandb>=0.16.0",
@@ -22,6 +21,7 @@ dependencies = [
     "ipykernel>=6.26.0",
     "notebook>=7.0.6",
     "bitsandbytes>=0.41.2.post2",
+    "cuml-cu11>=23.10.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
@@ -33,6 +33,11 @@ build-backend = "hatchling.build"
 [[tool.rye.sources]]
 name = "torch"
 url = "https://download.pytorch.org/whl/cu118"
+type = "index"
+
+[[tool.rye.sources]]
+name = "cuml-cu11"
+url = "https://pypi.nvidia.com"
 type = "index"
 
 [tool.rye]
