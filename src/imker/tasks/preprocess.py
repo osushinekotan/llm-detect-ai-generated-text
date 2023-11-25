@@ -24,6 +24,8 @@ class ExtractTfIdfFeaturesTask(imker.BaseTask):  # type: ignore
         self.text_columns = text_columns
         self.vectorizers: dict[str, TfidfVectorizer] = {}
 
+        self.kwargs["ngram_range"] = tuple(self.kwargs["ngram_range"])  # type: ignore
+
         self.use_gpu = use_gpu
 
     @property
