@@ -1,6 +1,7 @@
 ## Env
 set environment variables
 ```
+cp .env.example .env
 echo 'export $(cat .env | grep -v ^#)' >> ~/.bashrc
 ```
 
