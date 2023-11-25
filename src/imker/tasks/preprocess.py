@@ -10,7 +10,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm import tqdm
 
 
-class ExtractTfIdfFeaturesTask:
+class ExtractRawFeaturesTask(imker.BaseTask):  # type: ignore
+    def __init__(self, base_columns: list[str]) -> None:
+        self.base_columns = base_columns
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        return X[self.base_columns]
+
+
+class ExtractTfIdfFeaturesTask(imker.BaseTask):  # type: ignore
     def __init__(self, text_columns: list[str] = ["text"], use_gpu: bool = True, **kwargs: dict[str, Any]) -> None:
         self.kwargs = kwargs
         self.text_columns = text_columns
@@ -50,7 +58,7 @@ class ExtractTfIdfFeaturesTask:
             )
             output_df = pd.concat([output_df, tfidf_features], axis=1)
 
-        return output_df
+        return output_df.add_prefix("f_")
 
     def vectorize(self, X: pd.DataFrame, text_col: str) -> None:
         self.reset_vectorizer()
