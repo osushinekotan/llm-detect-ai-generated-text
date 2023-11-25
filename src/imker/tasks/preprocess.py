@@ -1,13 +1,67 @@
+from typing import Any
+
+import cupy as cp
 import imker
 import neattext as nt
 import pandas as pd
+from cuml.feature_extraction.text import TfidfVectorizer as TfidfVectorizer_gpu
 from nltk.stem import PorterStemmer, StemmerI
+from sklearn.feature_extraction.text import TfidfVectorizer
+from tqdm import tqdm
+
+
+class ExtractTfIdfFeaturesTask:
+    def __init__(self, text_columns: list[str] = ["text"], use_gpu: bool = True, **kwargs: dict[str, Any]) -> None:
+        self.kwargs = kwargs
+        self.text_columns = text_columns
+        self.vectorizers: dict[str, TfidfVectorizer] = {}
+
+        self.use_gpu = use_gpu
+
+    @property
+    def vectorizer(self) -> TfidfVectorizer | TfidfVectorizer_gpu:
+        return self._vectorizer
+
+    @vectorizer.setter
+    def vectorizer(self, val: TfidfVectorizer | TfidfVectorizer_gpu) -> None:
+        self._vectorizer = val
+
+    def reset_vectorizer(self) -> None:
+        if self.use_gpu:
+            self.vectorizer = TfidfVectorizer_gpu(**self.kwargs)
+        else:
+            self.vectorizer = TfidfVectorizer(**self.kwargs)
+
+    def fit(self, X: pd.DataFrame) -> "ExtractTfIdfFeaturesTask":
+        for text_col in self.text_columns:
+            self.vectorize(X=X, text_col=text_col)
+        return self
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        output_df = pd.DataFrame()
+        for text_col in self.text_columns:
+            vectorizer = self.vectorizers[text_col]
+            tfidf_features = vectorizer.transform(X[text_col]).toarray()
+            if self.use_gpu:
+                tfidf_features = cp.asnumpy(tfidf_features)
+            tfidf_features = pd.DataFrame(
+                tfidf_features,
+                columns=[f"{text_col}_tfidf_{i:03}" for i in range(tfidf_features.shape[1])],
+            )
+            output_df = pd.concat([output_df, tfidf_features], axis=1)
+
+        return output_df
+
+    def vectorize(self, X: pd.DataFrame, text_col: str) -> None:
+        self.reset_vectorizer()
+        self.vectorizer.fit(X[text_col])
+        self.vectorizers[text_col] = self.vectorizer
 
 
 class TextCleansingTask(imker.BaseTask):  # type: ignore
     def __init__(
         self,
-        text_cols: list[str] = ["text"],
+        text_columns: list[str] = ["text"],
         puncts: bool = True,
         stopwords: bool = False,
         urls: bool = True,
@@ -23,7 +77,7 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
         custom_pattern: str | None = None,
         stemmer: StemmerI = PorterStemmer(),
     ) -> None:
-        self.text_cols = text_cols
+        self.text_columns = text_columns
         self.puncts = puncts
         self.stopwords = stopwords
         self.urls = urls
@@ -41,7 +95,7 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
 
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         output_df = pd.DataFrame()
-        for text_col in self.text_cols:
+        for text_col in self.text_columns:
             df = self.clean(X=X, text_col=text_col)
             output_df = pd.concat([output_df, df], axis=1)
 
@@ -66,10 +120,12 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
                 currency_symbols=self.currency_symbols,
                 custom_pattern=self.custom_pattern,
             )
-            for text in X[text_col]
+            for text in tqdm(X[text_col], desc=f"Cleaning {text_col}")
         ]
         if self.stemmer:
-            cleansed_texts = [self.stemming(text, stemmer=self.stemmer) for text in cleansed_texts]
+            cleansed_texts = [
+                self.stemming(text, stemmer=self.stemmer) for text in tqdm(cleansed_texts, desc=f"Stemming {text_col}")
+            ]
         output_df[f"{text_col}_cleansed"] = cleansed_texts
         return output_df
 
