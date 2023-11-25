@@ -1,0 +1,69 @@
+# =========================================
+# Preprocess
+# =========================================
+extract_raw_features_task:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: src.imker.tasks.preprocess.ExtractRawFeaturesTask
+    init_params:
+      base_columns: []
+    cache: True
+
+text_cleansing_task:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: src.imker.tasks.preprocess.TextCleansingTask
+    init_params:
+      text_columns: ["text"]
+    cache: True
+
+extract_tfidf_features_task:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: src.imker.tasks.preprocess.ExtractTfIdfFeaturesTask
+    init_params:
+      text_columns: ["text_cleansed"]
+      max_features: 100
+      ngram_range: [1, 1]
+      use_gpu: false
+    cache: True
+
+# =========================================
+# Model
+# =========================================
+logistic_regression_task:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: sklearn.linear_model.LogisticRegression
+    init_params:
+      C: 1.0
+      random_state: ${seed}
+
+knn_classifier_task:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: sklearn.neighbors.KNeighborsClassifier
+    init_params:
+      n_neighbors: 5
+      weights: uniform
+      algorithm: auto
+      leaf_size: 30
+      p: 2
+      metric: minkowski
+      metric_params: null
+      n_jobs: null

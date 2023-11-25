@@ -12,6 +12,7 @@ defaults:
   - lightning/trainer: default
   - lightning/logger: default
   - cv: default
+  - imker/tasks: default
   - experiment: ???
 
 seed: 42
