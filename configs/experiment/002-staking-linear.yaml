@@ -15,7 +15,9 @@ notebook: stacking_linear_v01
 tags: ["staking"]
 description: "debugging staking"
 
+debug: false
 train: true
+
 n_splits: 5 # total folds
 train_folds: [0, 1] # train folds
 

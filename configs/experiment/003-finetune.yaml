@@ -20,7 +20,9 @@ notebook: finetune_v01
 tags: ["fine-tuning", "baseline"]
 description: ""
 
+debug: false
 train: true
+
 n_splits: 10 # total folds
 train_folds: [0] # train folds
 

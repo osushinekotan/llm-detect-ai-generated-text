@@ -16,4 +16,3 @@ defaults:
   - experiment: ???
 
 seed: 42
-debug: true
