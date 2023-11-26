@@ -20,27 +20,47 @@ text_cleansing_task:
       _target_: hydra.utils.get_class
       path: src.imker.tasks.preprocess.TextCleansingTask
     init_params:
-      text_columns: ["text"]
+      stemmer:
+        _target_: nltk.stem.PorterStemmer
     cache: True
 
-extract_tfidf_features_task:
+tfidf_vectorize_task_01:
   _target_: imker.Task
   config:
     _target_: imker.TaskConfig
     task:
       _target_: hydra.utils.get_class
-      path: src.imker.tasks.preprocess.ExtractTfIdfFeaturesTask
+      path: cuml.feature_extraction.text.TfidfVectorizer
     init_params:
-      text_columns: ["text_cleansed"]
-      max_features: 100
-      ngram_range: [1, 1]
-      use_gpu: false
+      ngram_range: [3, 5]
+    cache: True
+
+count_vectorize_task_01:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: cuml.feature_extraction.text.CountVectorizer
+    init_params:
+      ngram_range: [1, 5]
+    cache: True
+
+svd_decompose_task_01:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: sklearn.decomposition.TruncatedSVD
+    init_params:
+      n_components: 1000
     cache: True
 
 # =========================================
 # Model
 # =========================================
-logistic_regression_task:
+logistic_regression_task_01:
   _target_: imker.Task
   config:
     _target_: imker.TaskConfig
@@ -51,7 +71,7 @@ logistic_regression_task:
       C: 1.0
       random_state: ${seed}
 
-knn_classifier_task:
+knn_classifier_task_01:
   _target_: imker.Task
   config:
     _target_: imker.TaskConfig
@@ -59,11 +79,14 @@ knn_classifier_task:
       _target_: hydra.utils.get_class
       path: sklearn.neighbors.KNeighborsClassifier
     init_params:
-      n_neighbors: 5
-      weights: uniform
-      algorithm: auto
-      leaf_size: 30
-      p: 2
-      metric: minkowski
-      metric_params: null
-      n_jobs: null
+      n_neighbors: 100
+
+knn_classifier_task_02:
+  _target_: imker.Task
+  config:
+    _target_: imker.TaskConfig
+    task:
+      _target_: hydra.utils.get_class
+      path: sklearn.neighbors.KNeighborsClassifier
+    init_params:
+      n_neighbors: 1000
