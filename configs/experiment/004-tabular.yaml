@@ -17,6 +17,6 @@ tags: ["tabular", "baseline", "KNN", "TFIDF", "SVD", "COUNT"]
 description: ""
 
 train: true
-debug: false
+debug: true
 
 n_splits: 10 # total folds

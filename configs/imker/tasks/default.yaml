@@ -30,7 +30,7 @@ tfidf_vectorize_task_01:
     _target_: imker.TaskConfig
     task:
       _target_: hydra.utils.get_class
-      path: cuml.feature_extraction.text.TfidfVectorizer
+      path: src.imker.tasks.preprocess.TfIdfVectorizerTask
     init_params:
       ngram_range: [3, 5]
     cache: True
@@ -41,7 +41,7 @@ count_vectorize_task_01:
     _target_: imker.TaskConfig
     task:
       _target_: hydra.utils.get_class
-      path: cuml.feature_extraction.text.CountVectorizer
+      path: src.imker.tasks.preprocess.CountVectorizerTask
     init_params:
       ngram_range: [1, 5]
     cache: True

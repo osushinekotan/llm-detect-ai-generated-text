@@ -6,7 +6,7 @@ import neattext as nt
 import pandas as pd
 from cuml.feature_extraction.text import TfidfVectorizer as TfidfVectorizer_gpu
 from nltk.stem import PorterStemmer, StemmerI
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from tqdm import tqdm
 
 
@@ -130,3 +130,31 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
     @staticmethod
     def stemming(text: str, stemmer: StemmerI = PorterStemmer()) -> str:
         return " ".join([stemmer.stem(word) for word in text.split()])
+
+
+class TfIdfVectorizerTask(imker.BaseTask):  # type: ignore
+    def __init__(self, **kwargs: dict[str, Any]) -> None:
+        self.kwargs = kwargs
+        self.kwargs["ngram_range"] = tuple(self.kwargs["ngram_range"])  # type: ignore
+
+    def fit(self, X: list[str]) -> "TfIdfVectorizerTask":
+        self.vectorizer = TfidfVectorizer(**self.kwargs)
+        self.vectorizer.fit(X)
+        return self
+
+    def transform(self, X: list[str]) -> pd.DataFrame:
+        return self.vectorizer.transform(X)
+
+
+class CountVectorizerTask(imker.BaseTask):  # type: ignore
+    def __init__(self, **kwargs: dict[str, Any]) -> None:
+        self.kwargs = kwargs
+        self.kwargs["ngram_range"] = tuple(self.kwargs["ngram_range"])  # type: ignore
+
+    def fit(self, X: list[str]) -> "CountVectorizerTask":
+        self.vectorizer = CountVectorizer(**self.kwargs)
+        self.vectorizer.fit(X)
+        return self
+
+    def transform(self, X: list[str]) -> pd.DataFrame:
+        return self.vectorizer.transform(X)
