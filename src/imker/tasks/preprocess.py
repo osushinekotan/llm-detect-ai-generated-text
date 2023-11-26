@@ -71,7 +71,6 @@ class ExtractTfIdfFeaturesTask(imker.BaseTask):  # type: ignore
 class TextCleansingTask(imker.BaseTask):  # type: ignore
     def __init__(
         self,
-        text_columns: list[str] = ["text"],
         puncts: bool = True,
         stopwords: bool = False,
         urls: bool = True,
@@ -87,7 +86,6 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
         custom_pattern: str | None = None,
         stemmer: StemmerI = PorterStemmer(),
     ) -> None:
-        self.text_columns = text_columns
         self.puncts = puncts
         self.stopwords = stopwords
         self.urls = urls
@@ -103,16 +101,7 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
         self.custom_pattern = custom_pattern
         self.stemmer = stemmer
 
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        output_df = pd.DataFrame()
-        for text_col in self.text_columns:
-            df = self.clean(X=X, text_col=text_col)
-            output_df = pd.concat([output_df, df], axis=1)
-
-        return output_df
-
-    def clean(self, X: pd.DataFrame, text_col: str) -> pd.DataFrame:
-        output_df = pd.DataFrame()
+    def transform(self, X: list[str]) -> pd.DataFrame:
         cleansed_texts = [
             nt.clean_text(
                 text=text,
@@ -130,14 +119,13 @@ class TextCleansingTask(imker.BaseTask):  # type: ignore
                 currency_symbols=self.currency_symbols,
                 custom_pattern=self.custom_pattern,
             )
-            for text in tqdm(X[text_col], desc=f"Cleaning {text_col}")
+            for text in tqdm(X, desc="Cleansing")
         ]
         if self.stemmer:
             cleansed_texts = [
-                self.stemming(text, stemmer=self.stemmer) for text in tqdm(cleansed_texts, desc=f"Stemming {text_col}")
+                self.stemming(text, stemmer=self.stemmer) for text in tqdm(cleansed_texts, desc="Stemming")
             ]
-        output_df[f"{text_col}_cleansed"] = cleansed_texts
-        return output_df
+        return cleansed_texts
 
     @staticmethod
     def stemming(text: str, stemmer: StemmerI = PorterStemmer()) -> str:
