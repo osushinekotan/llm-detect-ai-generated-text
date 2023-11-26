@@ -13,10 +13,12 @@ defaults:
 experiment_name: ${hydra:job.override_dirname}
 notebook: tabular_v01
 
-tags: ["tabular", "baseline"]
+tags: ["tabular", "baseline", "KNN", "TFIDF", "SVD", "COUNT"]
 description: ""
 
 train: true
+debug: false
+
 n_splits: 10 # total folds
 train_folds: [0] # train folds
 
